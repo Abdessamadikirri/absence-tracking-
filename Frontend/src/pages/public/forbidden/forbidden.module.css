@@ -1,0 +1,24 @@
+.forbiddenpage{
+    
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+
+ >a{
+         
+        color: #11d667;
+        font-size: 2rem;
+    }
+}
+.forbidden{
+    font-family: sans-serif;
+    font-size: 3rem;
+    font-weight: bold;
+    color:#11d667 ;
+   
+}
+ 
