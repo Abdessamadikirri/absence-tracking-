@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Absence;
+use App\Models\Student;
 use Illuminate\Http\Request;
 
 class AbsenceController extends Controller
@@ -120,15 +121,58 @@ class AbsenceController extends Controller
          return response()->json(['message' => 'Absence record has been deleted successfully'],200);
     }
 
-    public function studentSentToAdministration()
+     
+
+
+        public function index()
     {
-        $absences = Absence::where('is_allowed',false)->with('student')->get();
+        $absences = Absence::with(['student.group'])
+            ->where('is_allowed', false)
+            ->get();
 
-        $students = $absences->pluck('student')->unique('id')->values();
-
-
-        return response()->json(['to administration' => $students]);
+        return response()->json($absences);
     }
+
+
+    
+    public function allow(Request $request, $id)
+{
+    $request->validate([
+        'is_allowed' => 'required|boolean',
+    ]);
+
+   $absence = Absence::findOrFail($id);
+ 
+    $student = $absence->student;
+    $student->warning_count += 1;
+    $student->save();
+ 
+    $absence->is_allowed = $request->input('is_allowed');
+    $absence->save();
+
+    return response()->json([
+         'message' => 'Absence permission updated successfully',
+         
+    ]);
+}
+
+public function justified(Request $request, $id){
+        $request->validate([
+        'is_justified' => 'required|boolean',
+        'is_allowed' => 'required|boolean'
+
+     
+    ]);
+       $absence = Absence::findOrFail($id);
+      
+       $absence->is_justified = $request->input('is_justified');
+       $absence->is_allowed = $request->input('is_allowed');
+       $absence->save();
+       return response()->json([
+         'message' => 'Absence justified updated successfully',
+         
+    ]);
+}
 
     
 }

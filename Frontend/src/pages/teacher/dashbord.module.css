@@ -136,3 +136,11 @@
      
     
 }
+
+.redRow{
+    background-color:#ed1322;
+}
+
+.show{
+    display: none;
+}

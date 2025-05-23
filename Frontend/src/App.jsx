@@ -23,6 +23,8 @@ import Cookies from 'js-cookie'
 import axios from 'axios'
 import TeacherRoute from './middleware/teacherRoute'
 import TeacherDashboard from './pages/teacher/dasebord'
+import Absencepage from './pages/Admin/Absence/Absence'
+import AdminDashbord from './pages/Admin/dashboardpage/dashboardpage'
 
 
 function App() {
@@ -41,28 +43,31 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<PublicLayouts />}>
+          <Route index element={<Homepage />} />
+          <Route path="/home" element={<Homepage />} />
+          <Route path="/signup" element={<SingupPage />} />
+          <Route path="/login" element={<LoginPage />} />
+        </Route>
+        <Route path="*" element={<NotFound />} />
+        <Route path="/Formbiden" element={<Formbiden />} />
         <Route path="/admin" element={<AdminRoute >
           <AdminLayouts />
         </AdminRoute>}>
+          <Route path='dashboard' element={<AdminDashbord />} />
           <Route path='majors' element={<MajorPage />} />
           <Route path="groups" element={<GroupPage />} />
           <Route path="students" element={<StudentPage />} />
           <Route path="createmajor" element={<CreateMajor />} />
           <Route path="creategroup" element={<CreateGroup />} />
           <Route path="createstudent" element={<CreateStudent />} />
+          <Route path="absence" element={<Absencepage />} />
         </Route>
         <Route path="/teacher" element={<TeacherRoute><TeacherLayouts /></TeacherRoute>}>
-          <Route index element={<TeacherDashboard />} />
+          <Route path='/teacher' element={<TeacherDashboard />} />
         </Route>
 
-        <Route path="/" element={<PublicLayouts />}>
 
-          <Route index element={<Homepage />} />
-          <Route path="singup" element={<SingupPage />} />
-          <Route path="login" element={<LoginPage />} />
-        </Route>
-        <Route path="*" element={<NotFound />} />
-        <Route path="/Formbiden" element={<Formbiden />} />
       </Routes>
 
     </BrowserRouter>

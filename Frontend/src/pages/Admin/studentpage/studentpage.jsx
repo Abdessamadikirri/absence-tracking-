@@ -91,6 +91,60 @@ export default function StudentPage() {
             });
         }
     };
+    // this function for fetching sutdent based on the group
+    const [formData, setFormData] = useState({ group_name: "" });
+
+
+    const handleFormData = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setstudents(prevstate => {
+            return {
+                ...prevstate,
+                is_loading: true
+
+            }
+        })
+        try {
+            const response = await fetch(
+                `http://localhost:8000/api/student/by-group?group_name=${encodeURIComponent(formData.group_name)}`,
+                {
+                    credentials: "include",
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/json",
+                    },
+
+                }
+            );
+
+            const data = await response.json();
+            setstudents(prvstate => {
+                return {
+                    ...prvstate,
+                    is_loading: false,
+                    students: data
+                }
+            });
+            setismarked({})
+            console.log(data);
+        } catch (error) {
+            console.error("Error fetching students:", error);
+            setstudents(prevstate => {
+                return {
+                    ...prevstate,
+                    is_loading: false,
+                    error: error.message
+                }
+            })
+        }
+    };
     return (
         <div className={styles.student}>
             <div className={styles.header}>
@@ -99,6 +153,26 @@ export default function StudentPage() {
                     <p className={styles.description}>Manage students and track their attendance</p>
                 </div>
                 <button className={styles.button}><Plus className={styles.icon} /><Link className={styles.a} to="/admin/createstudent">Add Student</Link></button>
+            </div>
+            <div>
+                <form className={styles.form} onSubmit={handleSubmit}>
+                    <div className={styles.group}>
+                        <label className={styles.label}>Group Name</label>
+                        <select className={styles.input}
+
+                            name="group_name"
+                            onChange={handleFormData}>
+                            <option value="">Group</option>
+                            <option value="DD201">DD201</option>
+                            <option value="AA201">AA201</option>
+                        </select>
+
+
+
+
+                    </div>
+                    <button className={styles.filterbutton} type="submit">Start Session</button>
+                </form>
             </div>
             <div className={styles.studentlist}>
                 {is_loading ? <MiniSpinner /> : (

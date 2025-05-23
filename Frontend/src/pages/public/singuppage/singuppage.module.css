@@ -81,3 +81,13 @@
     color:  rgba(0,0,0,0.6);
     text-transform: capitalize;
 }
+
+.link{
+    
+    text-transform: capitalize;
+     font-style: italic;
+    color:  rgba(0,0,0,0.6);
+   
+    font-family: sans-serif;
+
+}

@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react'
 import styles from './loginpage.module.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../../../redux/action/authaction'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import Spinner from '../spinner/spinner'
+
+Spinner
 export default function LoginPage() {
     const [formdata, setformdata] = useState({
         email: "",
@@ -44,6 +47,7 @@ export default function LoginPage() {
             console.log('error:', error)
         }
     }
+    if (isauth) return <Spinner />
     return (
 
         <div className={styles.login}>
@@ -60,6 +64,7 @@ export default function LoginPage() {
                 </div>
 
                 <button className={styles.button} type='submit'>Login</button>
+                <Link className={styles.link} to="/login">create a an account </Link>
             </form>
         </div>
 

@@ -5,7 +5,7 @@ export default function Formbiden() {
     return (
         <div className={styles.forbiddenpage}>
             <div className={styles.forbidden}>
-                Formbiden
+                Page Note Found
             </div>
             <Link to="/">return</Link>
         </div>

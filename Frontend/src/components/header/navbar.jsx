@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, replace, useNavigate } from 'react-router-dom';
 import styles from './navbar.module.css'
 import { LogOut, LogIn } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,6 +16,7 @@ export default function Navbar() {
         }
     }
     const isauth = useSelector(state => state.user.isauth)
+    const userName = useSelector(state => state.user.user.name)
     return (
         <div className={styles.navbar}>
             <div className={styles.title}>
@@ -25,7 +26,7 @@ export default function Navbar() {
                 {isauth ? (
                     <>
                         <p className={styles.profile}>
-                            <a href="">Profile</a>
+                            {userName}
                         </p>
                         <button className={styles.button} onClick={logtout}>
                             <LogOut className={styles.icon} /> Logout

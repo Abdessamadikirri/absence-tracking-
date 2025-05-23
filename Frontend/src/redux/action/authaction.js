@@ -87,14 +87,14 @@ export const logout = ()=>{
             payload:response.data.message
          })
          dispatch({type:USER_LOADING,payload:false})
-        return response.data
+         
        } catch (error) {
         dispatch({
             type:LOGOUT_FAILED,
             payload:error.response?.data?.message || error.message
         })
         dispatch({type:USER_LOADING,payload:false})
-        return Promise.reject(error)
+         
 
        }
     }

@@ -50,27 +50,27 @@ class StudentController extends Controller
     return response()->json($students);
 }
      
-        public function indexByGroup(Request $request)
+       public function indexByGroup(Request $request)
 {
-    // Get group name from the request
     $groupName = $request->group_name;
 
     if (!$groupName) {
         return response()->json(['error' => 'Group name is required'], 400);
     }
 
-    // Find the group by name
     $group = Group::where('name', $groupName)->first();
 
     if (!$group) {
         return response()->json(['error' => 'Group not found'], 404);
     }
 
-    // Get all students in that group
     $students = Student::where('group_id', $group->id)->get();
 
-    // Add the group name to each student
     $data = $students->map(function ($student) use ($request) {
+        // Get the latest absence record for the student
+        $lastAbsence = $student->absence()->latest('date')->first();
+
+
         return [
             'id' => $student->id,
             'name' => $student->name,
@@ -79,11 +79,13 @@ class StudentController extends Controller
             'warning_count' => $student->warning_count,
             'group_id' => $student->group_id,
             'group_name' => $request->group_name,
+            'is_allowed' => $lastAbsence ? $lastAbsence->is_allowed : true, // if no absence, assume allowed
         ];
     });
 
     return response()->json($data);
 }
+
 
     
 

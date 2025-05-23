@@ -26,16 +26,16 @@
         color:  rgba(0,0,0,0.7);
 }
 .p:hover{
-    background-color: #11d667;
+   background-color: #11d667;
     transform: scale(1.04);
     >a{
         color: white;
-        /* height: 40px;
+        height: 40px;
         width: 160px;
         display: flex;
         justify-content: start;
-        align-items: center; */
-    }
+        align-items: center; 
+     }
     >.icon{
         color: white;
     }
@@ -50,6 +50,21 @@
         font-weight: 400;
          
 }
-
  
 
+ 
+.pactive{
+     background-color: #11d667;
+    transform: scale(1.04);
+}
+.iconactive{
+    color: white;
+}
+.aactive{
+    color: white;
+        height: 40px;
+        width: 160px;
+        display: flex;
+        justify-content: start;
+        align-items: center; 
+}

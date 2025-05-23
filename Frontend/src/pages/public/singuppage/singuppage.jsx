@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import styles from './singuppage.module.css'
 import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { register } from '../../../redux/action/authaction'
 export default function SingupPage() {
@@ -58,6 +59,7 @@ export default function SingupPage() {
 
 
                 <button className={styles.button} type='submit'>Sing up</button>
+                <Link className={styles.link} to="/login">already have an account</Link>
             </form>
         </div>
 

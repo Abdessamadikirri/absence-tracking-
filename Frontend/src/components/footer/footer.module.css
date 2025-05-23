@@ -3,7 +3,7 @@
     height: auth;
     display: flex ;
     justify-content: center;
-    background-color: #11d667;
+    background-color: #15803d;
     border-radius: 5px;
     user-select: none;
     padding: 15px;
@@ -43,4 +43,20 @@
     font-weight: 400;
     font-style: italic;
     color:  white;
+}
+
+.footerLinks a {
+  font-size: 1.2rem;
+  font-family: sans-serif;
+  font-weight: 400;
+  font-style: italic;
+  color:  white;
+  margin: 0 10px;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footerLinks a:hover {
+  color:white;
+  text-decoration: underline;
 }

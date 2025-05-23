@@ -15,6 +15,7 @@ export default function TeacherDashboard() {
         'is_allowed': false,
         'is_justified': false
     })
+    const [is_marked, setismarked] = useState({})
 
     const handleAbsence = (e) => {
         const { name, value } = e.target
@@ -27,14 +28,11 @@ export default function TeacherDashboard() {
     }
     const handlesubmitAbsence = async (e, studentID, groupID) => {
         e.preventDefault()
-        setAbsence(prevstate => {
-            return {
-                ...prevstate,
-                group_id: groupID,
-                student_id: studentID
-
-            }
-        })
+        const newAbsence = {
+            ...absenceData,
+            group_id: groupID,
+            student_id: studentID
+        };
         try {
             const token = Cookies.get("XSRF-TOKEN")
             const res = await fetch('http://localhost:8000/api/absence',
@@ -46,7 +44,7 @@ export default function TeacherDashboard() {
                         "X-XSRF-TOKEN": token,
                     },
                     credentials: "include",
-                    body: JSON.stringify(absenceData)
+                    body: JSON.stringify(newAbsence)
                 }
 
             )
@@ -54,6 +52,13 @@ export default function TeacherDashboard() {
                 const errordata = await res.json()
                 throw new Error(errordata.message || 'somthing went wrong')
             }
+            setismarked(prev => {
+                return {
+                    ...prev,
+                    [studentID]: true
+                }
+            })
+
 
         } catch (error) {
             console.log('error', error.message)
@@ -110,6 +115,7 @@ export default function TeacherDashboard() {
                     students: data
                 }
             });
+            setismarked({})
             console.log(data);
         } catch (error) {
             console.error("Error fetching students:", error);
@@ -132,6 +138,7 @@ export default function TeacherDashboard() {
                     <div className={styles.group}>
                         <label className={styles.label}>Start Time</label>
                         <select name="start_time" className={styles.select} onChange={handleAbsence} value={absenceData.start_time}>
+                            <option value="">Start time</option>
                             <option value="08:30">08:30</option>
                             <option value="11:00">11:00</option>
                             <option value="01:30">01:30</option>
@@ -142,6 +149,7 @@ export default function TeacherDashboard() {
                     <div className={styles.group}>
                         <label className={styles.label}>End Time</label>
                         <select name="end_time" className={styles.select} onChange={handleAbsence} value={absenceData.end_time}>
+                            <option value="">End start</option>
                             <option value="11:00">11:00</option>
                             <option value="13:30">13:30</option>
                             <option value="16:00">16:00</option>
@@ -156,7 +164,7 @@ export default function TeacherDashboard() {
 
                     <div className={styles.group}>
                         <label className={styles.label}>Marked_by</label>
-                        <input type="text" className={styles.input} onChange={handleAbsence} name='marked_by' value={absenceData.marked_by} />
+                        <input type="text" className={styles.input} onChange={handleAbsence} name='marked_by' placeholder='Teacher Name' value={absenceData.marked_by} />
                     </div>
                 </div>
 
@@ -164,14 +172,14 @@ export default function TeacherDashboard() {
                     <form className={styles.form} onSubmit={handleSubmit}>
                         <div className={styles.group}>
                             <label className={styles.label}>Group Name</label>
-                            <input
-                                type="text"
-                                className={styles.input}
-                                placeholder="Group"
+                            <select className={styles.input}
+
                                 name="group_name"
-                                value={formData.group_name}
-                                onChange={handleFormData}
-                            />
+                                onChange={handleFormData}>
+                                <option value="">Group</option>
+                                <option value="DD201">DD201</option>
+                                <option value="AA201">AA201</option>
+                            </select>
                         </div>
                         <button className={styles.button} type="submit">Start Session</button>
                     </form>
@@ -192,20 +200,20 @@ export default function TeacherDashboard() {
                         </thead>
                         <tbody>
                             {students.map(({ id, name, national_id, group_name, group_id, is_allowed }) => (
-                                <tr className={styles.row} key={id}>
+                                <tr className={`${styles.row} ${!Boolean(is_allowed) ? styles.redRow : ''}`} key={id}>
                                     <td className={styles.td}>{name}</td>
                                     <td className={styles.td}>{national_id}</td>
                                     <td className={styles.td}>{group_name}</td>
                                     <td className={styles.td}>
-                                        <button onClick={(e) => handlesubmitAbsence(e, id, group_id)} className={styles.btn}><SquareCheck className={styles.icone} /></button>
-                                        {/* <button
-                                            onClick={() => deleteStudent(id)}
+                                        <button
+                                            onClick={(e) => handlesubmitAbsence(e, id, group_id)}
                                             className={styles.btn}
 
                                         >
-                                            <Square className={styles.icone} />
-                                        </button> */}
+                                            {is_marked[id] ? <SquareCheck className={styles.icone} /> : <Square className={styles.icone} />}
+                                        </button>
                                     </td>
+
                                 </tr>
                             ))}
                         </tbody>

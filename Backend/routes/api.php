@@ -10,7 +10,7 @@ use App\Http\Controllers\AbsenceController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\MajorController;
 use App\Http\Controllers\StudentController;
-use App\Http\Middleware\AdminMiddleware;
+ 
  
 
 Route::get('/user', function (Request $request) {
@@ -30,8 +30,7 @@ Route::middleware(['auth:sanctum'])->group(function(){
     Route::get('/groups',[GroupController::class,'index']);
     Route::get('/groups/{id}',[GroupController::class,'show']);
 
-    Route::get('/absence/group/{sgroupId}',[AbsenceController::class ,'groupAbsence']);
-    Route::get('/absence-toadmin' ,[AbsenceController::class, 'studentSentToAdministration']);
+     
 
     Route::get('/student/by-group', [StudentController::class, 'indexByGroup']);
 
@@ -57,9 +56,11 @@ Route::middleware(['auth:sanctum'])->group(function(){
     Route::put('/groups/{id}',[GroupController::class,'update']);
     Route::delete('/groups/{id}',[GroupController::class,'delete']);
     
-    Route::get('/absence/student/{id}',[AbsenceController::class ,'studentAbsence']);
+    Route::patch('/absence/justified/{id}',[AbsenceController::class,'justified']);
+    Route::patch('/absence/allow/{id}', [AbsenceController::class, 'allow']);
+    Route::get('/absence',[AbsenceController::class,'index']);
     Route::post('/absence',[AbsenceController::class ,'store']);
     Route::put('/absence/{id}',[AbsenceController::class ,'update']);
-    Route::delete('/absence/{id}',[AbsenceController::class ,'delete']);
+    
     
 });
