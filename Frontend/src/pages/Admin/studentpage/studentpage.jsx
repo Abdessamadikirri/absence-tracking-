@@ -171,7 +171,7 @@ export default function StudentPage() {
 
 
                     </div>
-                    <button className={styles.filterbutton} type="submit">Start Session</button>
+                    <button className={styles.filterbutton} type="submit">Filter by group</button>
                 </form>
             </div>
             <div className={styles.studentlist}>

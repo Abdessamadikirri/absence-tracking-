@@ -45,32 +45,38 @@ class AbsenceController extends Controller
         return response()->json(['studentAbsence' =>$newAbsences],200);
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'student_id'=> 'required|numeric',
-            'group_id' => 'required|numeric',
-            'date' => 'required|string',
-            'start_time' => 'required|string',
-            'end_time' => 'required|string',
-            'marked_by' => 'required|string',
-            'is_allowed' => 'required|boolean',
-            'is_justified' => 'required|boolean'
-        ]);
+   public function storeMany(Request $request)
+{
+    // 1. Validate the incoming array of absence records
+    $validated = $request->validate([
+        'absences' => 'required|array',
+        'absences.*.student_id' => 'required|numeric',
+        'absences.*.group_id' => 'required|numeric',
+        'absences.*.date' => 'required|string',
+        'absences.*.start_time' => 'required|string',
+        'absences.*.end_time' => 'required|string',
+        'absences.*.marked_by' => 'required|string',
+        'absences.*.is_allowed' => 'required|boolean',
+        'absences.*.is_justified' => 'required|boolean',
+    ]);
 
-        Absence::create([
-            'student_id' =>$request->input('student_id'),
-            'group_id'=>$request->input('group_id'),
-            'date'=>$request->input('date'),
-            'start_time' =>$request->input('start_time'),
-            'end_time' =>$request->input('end_time'),
-            'marked_by' =>$request->input('marked_by'),
-            'is_allowed' =>$request->input('is_allowed'),
-            'is_justified' =>$request->input('is_justified'),
+    // 2. Add timestamps and prepare for bulk insert
+    $absencesToInsert = collect($validated['absences'])->map(function ($absence) {
+        return array_merge($absence, [
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
+    })->toArray();
 
-        return response()->json(["message" => 'Absence created successfully' ],201);
-    }
+    // 3. Insert all records in one query
+    Absence::insert($absencesToInsert);
+
+    // 4. Return success response
+    return response()->json([
+        'message' => 'Absences created successfully',
+        'count' => count($absencesToInsert)
+    ], 201);
+}
 
     public function update($id ,Request $request)
     {
