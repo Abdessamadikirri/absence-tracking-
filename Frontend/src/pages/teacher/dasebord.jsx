@@ -27,7 +27,7 @@ export default function TeacherDashboard() {
     const markStudent = (e, studentID, groupID) => {
 
 
-        const absenceObject = {
+        let absenceObject = {
             ...time,
             student_id: studentID,
             group_id: groupID,
@@ -39,13 +39,15 @@ export default function TeacherDashboard() {
 
                 ]
             })
+
         } else if (e.target.checked === false) {
-            const filteredData = absenceData.filter(absence => absence.student_id !== studentID)
+            let filteredData = absenceData.filter(absence => absence.student_id !== studentID)
             setAbsence(() => {
                 return [
                     ...filteredData
                 ]
             })
+
         }
 
 
@@ -80,6 +82,8 @@ export default function TeacherDashboard() {
                     ...prevstate, message: data.message, show: true
                 }
             })
+            setAbsence([]);
+            marktime({})
             if (!res.ok) {
                 const errordata = await res.json()
                 throw new Error(errordata.message || 'somthing went wrong')
@@ -90,6 +94,7 @@ export default function TeacherDashboard() {
         } catch (error) {
             console.log('error', error.message)
         }
+
     }
 
 

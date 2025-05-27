@@ -56,6 +56,9 @@ Route::middleware(['auth:sanctum'])->group(function(){
     Route::put('/groups/{id}',[GroupController::class,'update']);
     Route::delete('/groups/{id}',[GroupController::class,'delete']);
     
+
+    
+    Route::get('/dashboard',[AbsenceController::class,'Admindashboard']);
     Route::patch('/absence/justified/{id}',[AbsenceController::class,'justified']);
     Route::patch('/absence/allow/{id}', [AbsenceController::class, 'allow']);
     Route::get('/absence',[AbsenceController::class,'index']);

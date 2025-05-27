@@ -3,12 +3,40 @@
 namespace App\Http\Controllers;
 
 use App\Models\Absence;
+use App\Models\Group;
+use App\Models\Major;
 use App\Models\Student;
 use Illuminate\Http\Request;
 
 class AbsenceController extends Controller
 {
+    public function Admindashboard(){
 
+
+        $absenceCounts = Absence::selectRaw('group_id, COUNT(*) as total_absences')
+        ->groupBy('group_id')
+        ->get();
+        $totalmajors =Major::count();
+        $totalegroups = Group::count();
+        $totalabsence =Absence::count();
+        $totalStudents = Student::count();
+        $results = $absenceCounts->map(function ($item) {
+        $group = Group::find($item->group_id);
+
+        return [
+            'group_id' => $item->group_id,
+            'group_name' => $group ? $group->name : 'Unknown',
+            'total_absences' => $item->total_absences,
+        ];
+    });
+
+    return response()->json(['totalemajors' =>$totalmajors,
+                    'totalstudent' =>$totalStudents,
+                    'totalgroups' =>$totalegroups,
+                    'totalabsence'=>$totalabsence,
+                    'graphdata'=>$results]);
+
+    }
 // index all the absence based on the group id 
     public function groupAbsence($groupID)
     {
