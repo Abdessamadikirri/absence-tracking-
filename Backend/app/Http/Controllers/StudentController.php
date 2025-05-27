@@ -33,7 +33,7 @@ class StudentController extends Controller
     
     public function index()
 {
-    $students = Student::with('group')->get();
+    $students = Student::with('group')->limit(10)->get();
 
     $students = $students->map(function ($student) {
         return [

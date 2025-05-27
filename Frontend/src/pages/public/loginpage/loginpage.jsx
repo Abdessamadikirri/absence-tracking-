@@ -5,8 +5,9 @@ import { login } from '../../../redux/action/authaction'
 import { Link, useNavigate } from 'react-router-dom'
 import Spinner from '../spinner/spinner'
 
-Spinner
 export default function LoginPage() {
+    const message = useSelector(state => state.user.message)
+    const toggle = useSelector(state => state.user.toggle_message)
     const [formdata, setformdata] = useState({
         email: "",
         password: ""
@@ -29,7 +30,7 @@ export default function LoginPage() {
 
     useEffect(() => {
         if (isauth && role === 'admin') {
-            navigate('/admin')
+            navigate('/admin/dashboard')
         } else if (isauth && role === 'teacher') {
             navigate('/teacher')
         } else if (!isauth) {
@@ -65,6 +66,11 @@ export default function LoginPage() {
 
                 <button className={styles.button} type='submit'>Login</button>
                 <Link className={styles.link} to="/login">create a an account </Link>
+                <div className={`${styles.message} ${toggle ? styles.show : ''}`}>
+
+                    {message}
+
+                </div>
             </form>
         </div>
 

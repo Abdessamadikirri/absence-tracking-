@@ -61,10 +61,11 @@ export default function CreateGroup() {
                     <label className={styles.lable} htmlFor="code">Major code</label>
                     <select className={styles.input} id="code" name="major_id" onChange={handlefromdata}>
                         <option className={styles.option} value="">Select a major code</option>
-                        <option className={styles.option} value="5">DD</option>
-                        <option className={styles.option} value="2">AA</option>
-                        <option className={styles.option} value="6">MH</option>
-                        <option className={styles.option} value="4">EL</option>
+                        <option className={styles.option} value="7">TSGE</option>
+                        <option className={styles.option} value="8">TSFC</option>
+                        <option className={styles.option} value="9">TDI</option>
+                        <option className={styles.option} value="10">TRI</option>
+                        <option className={styles.option} value="14">CU</option>
 
                     </select>
                 </div>

@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 
 class AbsenceController extends Controller
 {
+
+// index all the absence based on the group id 
     public function groupAbsence($groupID)
     {
         $absences = Absence::where('group_id',$groupID)
@@ -27,6 +29,7 @@ class AbsenceController extends Controller
         return response()->json(['groupAbsence' => $newAbsences],200);
 
     }
+// index the absence based on the student id 
     public function studentAbsence($studentID){
         $absences = Absence::where('student_id',$studentID)
                             ->with('student')
@@ -45,39 +48,42 @@ class AbsenceController extends Controller
         return response()->json(['studentAbsence' =>$newAbsences],200);
     }
 
-   public function storeMany(Request $request)
+
+
+
+// store method for absence 
+  public function store(Request $request)
 {
-    // 1. Validate the incoming array of absence records
-    $validated = $request->validate([
-        'absences' => 'required|array',
-        'absences.*.student_id' => 'required|numeric',
-        'absences.*.group_id' => 'required|numeric',
-        'absences.*.date' => 'required|string',
-        'absences.*.start_time' => 'required|string',
-        'absences.*.end_time' => 'required|string',
-        'absences.*.marked_by' => 'required|string',
-        'absences.*.is_allowed' => 'required|boolean',
-        'absences.*.is_justified' => 'required|boolean',
+     
+    $request->validate([
+        '*.student_id'   => 'required|integer|exists:students,id',
+        '*.group_id'     => 'required|integer|exists:groups,id',
+        '*.date'         => 'required|date',
+        '*.start_time'   => 'required|date_format:H:i',
+        '*.end_time'     => 'required|date_format:H:i|after:start_time',
+        '*.marked_by'    => 'required|string',
+        '*.is_allowed'   => 'required|boolean',
+        '*.is_justified' => 'required|boolean',
     ]);
 
-    // 2. Add timestamps and prepare for bulk insert
-    $absencesToInsert = collect($validated['absences'])->map(function ($absence) {
-        return array_merge($absence, [
-            'created_at' => now(),
-            'updated_at' => now(),
+     
+    foreach ($request->all() as $absenceData) {
+        Absence::create([
+            'student_id'    => $absenceData['student_id'],
+            'group_id'      => $absenceData['group_id'],
+            'date'          => $absenceData['date'],
+            'start_time'    => $absenceData['start_time'],
+            'end_time'      => $absenceData['end_time'],
+            'marked_by'     => $absenceData['marked_by'],
+            'is_allowed'    => $absenceData['is_allowed'],
+            'is_justified'  => $absenceData['is_justified'],
         ]);
-    })->toArray();
+    }
 
-    // 3. Insert all records in one query
-    Absence::insert($absencesToInsert);
-
-    // 4. Return success response
-    return response()->json([
-        'message' => 'Absences created successfully',
-        'count' => count($absencesToInsert)
-    ], 201);
+    return response()->json(['message' => 'Absences created successfully.'], 201);
 }
 
+//update method for the absence records 
     public function update($id ,Request $request)
     {
         $request->validate([
@@ -111,7 +117,7 @@ class AbsenceController extends Controller
 
 
     }
-
+//delete by student method 
     public function deleteAbsenceForStudent($studentId)
     {
         $absences = Absence::where('user_id',$studentId)->get();
@@ -129,7 +135,7 @@ class AbsenceController extends Controller
 
      
 
-
+//index method 
         public function index()
     {
         $absences = Absence::with(['student.group'])
@@ -141,27 +147,41 @@ class AbsenceController extends Controller
 
 
     
-    public function allow(Request $request, $id)
+
+
+    //allow method 
+   public function allow(Request $request, $id)
 {
     $request->validate([
         'is_allowed' => 'required|boolean',
     ]);
 
-   $absence = Absence::findOrFail($id);
- 
+    $absence = Absence::findOrFail($id);
+    $studentId = $absence->student_id;
+    $isAllowed = $request->input('is_allowed');
+    
+   
     $student = $absence->student;
     $student->warning_count += 1;
     $student->save();
- 
-    $absence->is_allowed = $request->input('is_allowed');
-    $absence->save();
+    
+     
+    $absences = Absence::where('student_id', $studentId)->get();
+    
+    foreach ($absences as $abs) {
+        $abs->is_allowed = $isAllowed;
+        $abs->save();
+    }
 
     return response()->json([
-         'message' => 'Absence permission updated successfully',
+        'message' => 'Absence permission updated successfully for all '.$student->name.' records',
          
     ]);
 }
 
+
+
+//justified method for the absence records 
 public function justified(Request $request, $id){
         $request->validate([
         'is_justified' => 'required|boolean',
@@ -169,13 +189,22 @@ public function justified(Request $request, $id){
 
      
     ]);
+
        $absence = Absence::findOrFail($id);
-      
-       $absence->is_justified = $request->input('is_justified');
-       $absence->is_allowed = $request->input('is_allowed');
-       $absence->save();
+       $studentID = $absence->student_id; 
+       $student = Student::findOrFail($studentID);
+
+       $Absences = Absence::where('student_id', $studentID)->get();
+       $is_allowed = $request->input('is_allowed');
+       $is_justified = $request->input('is_justified'); 
+       foreach($Absences as $abs){
+          $abs->is_allowed = $is_allowed;
+          $abs->is_justified = $is_justified;
+          $abs->save();
+        }
+    
        return response()->json([
-         'message' => 'Absence justified updated successfully',
+         'message' => 'Absence justified  successfully for all '.$student->name.' records', 
          
     ]);
 }

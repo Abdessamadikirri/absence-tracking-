@@ -51,14 +51,14 @@ class AuthController extends Controller
 
          
         if (!$user || !Hash::check($request->input('password'), $user->password)) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+            return response()->json(['message' => 'Email or password is invalid '], 401);
         }
 
       
         Auth::login($user);
 
         return response()->json([
-            'message' => 'User logged in successfully',
+            'message' => 'you  logged in successfully',
             'user'    => $user,
         ]);
     }

@@ -163,5 +163,37 @@
     cursor: pointer;
 }
 .red{
-     background-color:#ed1322;
+     background-color:#FF0000;
+}
+
+.message{
+    width: 600px;
+    height: 60px;
+    font-family: sans-serif;
+    font-size: 1.5rem;
+    font-style: italic;
+    font-weight: 500;
+    border-radius: 10px;
+    background-color: rgb(178, 242, 178);
+    color: rgba(0,0,0,0.6);
+    display: none;
+    padding: 10px;
+    >button{
+        font-family: sans-serif;
+        font-size: 1.5rem;
+        font-style: italic;
+        font-weight: 500;
+        background-color: transparent;
+        outline: none;
+        border: none;
+     
+    }
+}
+.show {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow:0px 0px 5px 5px green;
+
+
 }

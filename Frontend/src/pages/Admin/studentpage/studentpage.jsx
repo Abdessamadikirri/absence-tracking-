@@ -163,8 +163,11 @@ export default function StudentPage() {
                             name="group_name"
                             onChange={handleFormData}>
                             <option value="">Group</option>
-                            <option value="DD201">DD201</option>
-                            <option value="AA201">AA201</option>
+                            <option value="TSGE201">TSGE201</option>
+                            <option value="TSFC201">TSFC201</option>
+                            <option value="TDI201">TDI201</option>
+                            <option value="TRI201">TRI201</option>
+                            <option value="CU201">CU201</option>
                         </select>
 
 

@@ -4,6 +4,7 @@ const intialeState={
     user: '',
     isauth:false,
     is_loading:true,
+    toggle_message:false,
     message:""
 }
 
@@ -29,7 +30,7 @@ const Authreducer =(state=intialeState,action)=>{
             }
         case LOGIN_FAILED: 
         return{
-            ...state,isauth:false , message:action.payload
+            ...state,isauth:false , message:action.payload,toggle_message:true
         }
         case LOGOUT_SUCCED:
             return{
